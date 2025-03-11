@@ -22,7 +22,7 @@ public class CreateCarDTO {
     private String description;
 
     @PastOrPresent(message = "Manufacting date must be in the past present")
-    private LocalDate manufactingDate;
+    private LocalDate manufactureDate;
 
 
 

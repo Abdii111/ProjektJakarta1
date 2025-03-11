@@ -11,8 +11,8 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Car name is required")
-    private String name;
+    @NotBlank(message = "Car model is required")
+    private String model;
 
     @Size(max = 500, message = "Description cant exceed 500 characters")
     private String description;
@@ -30,8 +30,8 @@ public class Car {
     // Constructors
     public Car() {}
 
-    public Car (String name, String description, LocalDate manufactureDate, String make, int year) {
-        this.name = name;
+    public Car (String model, String description, LocalDate manufactureDate, String make, int year) {
+        this.model = model;
         this.description = description;
         this.manufactureDate = manufactureDate;
         this.make = make;
@@ -42,8 +42,8 @@ public class Car {
     public Long getId() { return id;}
     public void setId(Long id) { this.id = id;}
 
-    public String getName() { return name;}
-    public void setName(String name) { this.name = name;}
+    public String getModel() { return model;}
+    public void setModel(String model) { this.model = model;}
 
     public String getDescription() { return description;}
     public void setDescription(String description) { this.description = description;}

@@ -1,61 +1,64 @@
 package org.example.demo1.entity;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.*;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(indexes = {
+        @Index(name = "idx_car_make", columnList = "make"),
+        @Index(name = "idx_car_year", columnList = "year")
+})
 public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Car model is required")
-    private String model;
+    @Column(name = "name", nullable = false, length = 100)
+    @NotBlank(message = "Car name cannot be empty")
+    @Size(max = 100, message = "Car name cannot exceed 100 characters")
+    private String name;
 
-    @Size(max = 500, message = "Description cant exceed 500 characters")
+    @Column(name = "description", length = 500)
+    @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
 
-    @PastOrPresent(message = "Manufactor date must be in the past or present")
+    @Column(name = "manufacture_date", nullable = false)
+    @PastOrPresent(message = "Manufacture date cannot be in the future")
     private LocalDate manufactureDate;
 
+    @Column(name = "make", nullable = false, length = 50)
     @NotBlank(message = "Car make is required")
+    @Pattern(regexp = "^[A-Z][a-zA-Z ]+$", message = "Make must start with capital letter and contain only letters")
     private String make;
 
-    @Min(value = 1886, message = "Year must be a valid manufacturing year (1886 or later)")
-    @Max(value = 2025, message = "Year cannot be in the future")
+    @Column(name = "year", nullable = false)
+    @Min(value = 1900, message = "Year must be 1900 or later")
+    @Max(value = 2100, message = "Year must be 2100 or earlier")
     private int year;
 
-    // Constructors
-    public Car() {}
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    public Car (String model, String description, LocalDate manufactureDate, String make, int year) {
-        this.model = model;
-        this.description = description;
-        this.manufactureDate = manufactureDate;
-        this.make = make;
-        this.year = year;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
-    public Long getId() { return id;}
-    public void setId(Long id) { this.id = id;}
-
-    public String getModel() { return model;}
-    public void setModel(String model) { this.model = model;}
-
-    public String getDescription() { return description;}
-    public void setDescription(String description) { this.description = description;}
-
-    public LocalDate getManufactureDate() { return manufactureDate;}
-    public void setManufactureDate(LocalDate manufactureDate) {this.manufactureDate = manufactureDate;}
-
-    public String getMake() { return make;}
-    public void setMake(String make) { this.make = make;}
-
-    public int getYear() { return year;}
-    public void setYear(int year) { this.year = year;}
-
-
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
